@@ -1,0 +1,95 @@
+<div class="page-wrapper">
+  <nav class="navbar">
+    <div class="nav-brand">👤 Quản Lý Nhân Viên</div>
+    <button class="btn-back" routerLink="/employees">← Quay lại</button>
+  </nav>
+ 
+  <div class="content">
+    <h1>{{ isEditMode ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên mới' }}</h1>
+ 
+    <div class="loading" *ngIf="loading">Đang tải...</div>
+ 
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate *ngIf="!loading">
+      <div class="card">
+        <h2 class="section-title">Thông tin cơ bản</h2>
+ 
+        <div class="form-row">
+          <div class="form-group">
+            <label>Họ tên <span class="required">*</span></label>
+            <input type="text" formControlName="name" placeholder="Nhập họ tên"
+              [class.is-invalid]="f['name'].invalid && f['name'].touched" />
+            <div class="error-msg" *ngIf="f['name'].touched && f['name'].errors">
+              <span *ngIf="f['name'].errors['required']">Họ tên là bắt buộc</span>
+              <span *ngIf="f['name'].errors['maxlength']">Tối đa 100 ký tự</span>
+            </div>
+          </div>
+ 
+          <div class="form-group">
+            <label>Ngày sinh <span class="required">*</span></label>
+            <input type="date" formControlName="dob"
+              [class.is-invalid]="f['dob'].invalid && f['dob'].touched" />
+            <div class="error-msg" *ngIf="f['dob'].touched && f['dob'].errors">
+              <span *ngIf="f['dob'].errors['required']">Ngày sinh là bắt buộc</span>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="form-row">
+          <div class="form-group">
+            <label>Số điện thoại <span class="required">*</span></label>
+            <input type="text" formControlName="phone" placeholder="0912345678"
+              [class.is-invalid]="f['phone'].invalid && f['phone'].touched" />
+            <div class="error-msg" *ngIf="f['phone'].touched && f['phone'].errors">
+              <span *ngIf="f['phone'].errors['required']">Số điện thoại là bắt buộc</span>
+              <span *ngIf="f['phone'].errors['pattern']">Số điện thoại 10-15 chữ số</span>
+            </div>
+          </div>
+ 
+          <div class="form-group">
+            <label>Địa chỉ <span class="required">*</span></label>
+            <input type="text" formControlName="address" placeholder="Nhập địa chỉ"
+              [class.is-invalid]="f['address'].invalid && f['address'].touched" />
+            <div class="error-msg" *ngIf="f['address'].touched && f['address'].errors">
+              <span *ngIf="f['address'].errors['required']">Địa chỉ là bắt buộc</span>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Languages -->
+      <div class="card">
+        <h2 class="section-title">Ngoại ngữ</h2>
+        <div class="checkbox-grid">
+          <label class="checkbox-item" *ngFor="let lang of languages"
+            [class.selected]="isLangSelected(lang.id)">
+            <input type="checkbox" [checked]="isLangSelected(lang.id)"
+              (change)="toggleLanguage(lang.id)" />
+            <span>{{ lang.name }} – {{ lang.level }}</span>
+          </label>
+        </div>
+      </div>
+ 
+      <!-- Certificates -->
+      <div class="card">
+        <h2 class="section-title">Chứng chỉ</h2>
+        <div class="checkbox-grid">
+          <label class="checkbox-item" *ngFor="let cert of certificates"
+            [class.selected]="isCertSelected(cert.id)">
+            <input type="checkbox" [checked]="isCertSelected(cert.id)"
+              (change)="toggleCertificate(cert.id)" />
+            <span>{{ cert.name }}</span>
+          </label>
+        </div>
+      </div>
+ 
+      <div class="alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+ 
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" routerLink="/employees">Hủy</button>
+        <button type="submit" class="btn-submit" [disabled]="submitting">
+          {{ submitting ? 'Đang lưu...' : (isEditMode ? 'Cập nhật' : 'Thêm mới') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="page-wrapper">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand">👤 Quản Lý Nhân Viên</div>
+    <div class="nav-right">
+      <span class="nav-user">{{ currentUser?.username }} ({{ currentUser?.role }})</span>
+      <button class="btn-logout" (click)="logout()">Đăng xuất</button>
+    </div>
+  </nav>
+ 
+  <div class="content">
+    <div class="page-header">
+      <h1>Danh Sách Nhân Viên</h1>
+      <button class="btn-primary" routerLink="/employees/new">+ Thêm nhân viên</button>
+    </div>
+ 
+    <div class="alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+ 
+    <div class="loading" *ngIf="loading">Đang tải...</div>
+ 
+    <div class="table-wrapper" *ngIf="!loading">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Họ tên</th>
+            <th>Ngày sinh</th>
+            <th>Địa chỉ</th>
+            <th>Số điện thoại</th>
+            <th>Ngoại ngữ</th>
+            <th>Chứng chỉ</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let emp of employees; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td class="name-cell">{{ emp.name }}</td>
+            <td>{{ formatDate(emp.dob) }}</td>
+            <td>{{ emp.address }}</td>
+            <td>{{ emp.phone }}</td>
+            <td>
+              <span class="tag tag-lang" *ngFor="let l of emp.languages">
+                {{ l.name }} {{ l.level }}
+              </span>
+              <span *ngIf="!emp.languages?.length" class="text-muted">—</span>
+            </td>
+            <td>
+              <span class="tag tag-cert" *ngFor="let c of emp.certificates">
+                {{ c.name }}
+              </span>
+              <span *ngIf="!emp.certificates?.length" class="text-muted">—</span>
+            </td>
+            <td class="actions">
+              <button class="btn-edit" [routerLink]="['/employees', emp.id, 'edit']">Sửa</button>
+              <button class="btn-delete" (click)="confirmDelete(emp.id!)">Xóa</button>
+            </td>
+          </tr>
+          <tr *ngIf="employees.length === 0">
+            <td colspan="8" class="empty">Chưa có nhân viên nào</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+ 
+  <!-- Confirm Delete Modal -->
+  <div class="modal-overlay" *ngIf="deleteId != null">
+    <div class="modal">
+      <h3>Xác nhận xóa</h3>
+      <p>Bạn có chắc muốn xóa nhân viên này không?</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelDelete()">Hủy</button>
+        <button class="btn-confirm-delete" (click)="doDelete()">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
